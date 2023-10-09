@@ -17,7 +17,7 @@ const rateLimiter = require("express-rate-limit");
 
 // routes
 const authRouter = require("./routes/auth");
-const jobsRouter = require("./routes/jobs");
+const listsRouter = require("./routes/jobs");
 
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
@@ -36,7 +36,7 @@ app.use(xss());
 
 // routes
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs",authUser, jobsRouter);
+app.use("/api/v1/lists", authUser, listsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

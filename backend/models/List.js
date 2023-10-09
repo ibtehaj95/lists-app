@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const JobSchema = new mongoose.Schema({
+const ListSchema = new mongoose.Schema({
     company: {
         type: String,
         required: [true, "Provide Company Name"],
@@ -25,4 +25,4 @@ const JobSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-module.exports = mongoose.model("Job", JobSchema);
+module.exports = mongoose.model("List", ListSchema);

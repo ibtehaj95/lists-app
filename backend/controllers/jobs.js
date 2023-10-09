@@ -1,57 +1,57 @@
-const Job = require("../models/Job");
+const List = require("../models/List");
 const {StatusCodes} = require("http-status-codes");
 const {BadRequestError, NotFoundError} = require("../errors");
 
-const getAllJobs = async (req, res) => {
-    const jobs = await Job.find({
+const getAllLists = async (req, res) => {
+    const lists = await List.find({
         createdBy: req.user.userID,
     })
     .sort("createdAt");
-    res.status(StatusCodes.OK).json({jobs, count: jobs.length});
+    res.status(StatusCodes.OK).json({lists, count: lists.length});
 };
 
-const getJob = async (req, res) => {
+const getList = async (req, res) => {
     const userID = req.user.userID;
-    const jobID = req.params.id;
-    const job = await Job.findOne({
-        _id: jobID,
+    const listID = req.params.id;
+    const list = await List.findOne({
+        _id: listID,
         createdBy: userID,
     });
-    if(!job){
-        throw new NotFoundError("Job doesn't exist");
+    if(!list){
+        throw new NotFoundError("List doesn't exist");
     }
-    res.status(StatusCodes.OK).json({job});
+    res.status(StatusCodes.OK).json({list});
 };
 
-const createJob = async (req, res) => {
+const createList = async (req, res) => {
     req.body.createdBy = req.user.userID;
-    const job = await Job.create(req.body);
-    res.status(StatusCodes.CREATED).json({job});
+    const list = await List.create(req.body);
+    res.status(StatusCodes.CREATED).json({list});
 };
 
-const deleteJob = async (req, res) => {
+const deleteList = async (req, res) => {
     const userID = req.user.userID;
-    const jobID = req.params.id;
-    const job = await Job.findOneAndDelete({
-        _id: jobID,
+    const listID = req.params.id;
+    const list = await List.findOneAndDelete({
+        _id: listID,
         createdBy: userID,
     });
-    if(!job){
-        throw new NotFoundError("Job doesn't exist");
+    if(!list){
+        throw new NotFoundError("List doesn't exist");
     }
-    res.status(StatusCodes.OK).json({job});
+    res.status(StatusCodes.OK).json({list});
 };
 
-const updateJob = async (req, res) => {
+const updateList = async (req, res) => {
     const {company, position} = req.body;
     const userID = req.user.userID;
-    const jobID = req.params.id;
+    const listID = req.params.id;
     if(!company || !position){
         throw new BadRequestError("Enter Company and Job");
     }
-    const job = await Job.findByIdAndUpdate(
+    const list = await List.findByIdAndUpdate(
         {
-            _id: jobID,
+            _id: listID,
             createdBy: userID,
         },
         req.body,
@@ -60,16 +60,16 @@ const updateJob = async (req, res) => {
             runValidators: true,   
         }
     );
-    if(!job){
-        throw new NotFoundError("Job doesn't exist");
+    if(!list){
+        throw new NotFoundError("List doesn't exist");
     }
-    res.status(StatusCodes.OK).json({job});
+    res.status(StatusCodes.OK).json({list});
 };
 
 module.exports = {
-    getAllJobs,
-    getJob,
-    createJob,
-    deleteJob,
-    updateJob,
+    getAllLists,
+    getList,
+    createList,
+    deleteList,
+    updateList,
 }
