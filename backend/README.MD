@@ -1,7 +1,8 @@
 #### Setup
 
 ```bash
-npm install && npm start
+npm install
+bash scripts/start.sh
 ```
 
 #### Database Connection
@@ -9,5 +10,6 @@ npm install && npm start
 1. Import connect.js
 2. Invoke in start()
 3. Setup .env in the root
-4. Add MONGO_URI with correct value
-```
+  3.1 Set the MongoDB connection string with MONGO_URI,
+  3.2 Set the JWT_SECRET as a 256-bit string (encryption key) from https://acte.ltd/utils/randomkeygen,
+  3.3 Set the JWT_LIFETIME as 30d, or some other appropriate value
