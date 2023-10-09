@@ -43,11 +43,11 @@ const deleteList = async (req, res) => {
 };
 
 const updateList = async (req, res) => {
-    const {company, position} = req.body;
+    const {title, items, completed} = req.body;
     const userID = req.user.userID;
     const listID = req.params.id;
-    if(!company || !position){
-        throw new BadRequestError("Enter Company and Job");
+    if(!title || !items || completed === "" || completed === undefined){
+        throw new BadRequestError("Enter Title, Items and Status");
     }
     const list = await List.findByIdAndUpdate(
         {

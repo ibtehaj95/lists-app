@@ -1,20 +1,18 @@
 const mongoose = require("mongoose");
 
 const ListSchema = new mongoose.Schema({
-    company: {
+    title: {
         type: String,
-        required: [true, "Provide Company Name"],
-        maxlength: 50,
+        required: [true, "Provide Title"],
+        maxlength: 100,
     },
-    position: {
-        type: String,
-        required: [true, "Provide Position Name"],
-        maxlength: 50,
+    items: {
+        type: [String],
+        required: [true, "Provide Item"],
     },
-    status: {
-        type: String,
-        enum: ["interview", "declined", "pending"],
-        default: "pending",
+    completed: {
+        type: Boolean,
+        default: false,
     },
     createdBy: {
         type: mongoose.Types.ObjectId,
