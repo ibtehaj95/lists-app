@@ -5,7 +5,7 @@ npm install
 bash scripts/start.sh
 ```
 
-#### Database Connection
+#### Database Connection and .env Setup
 
 1. Import connect.js
 2. Invoke in start()
