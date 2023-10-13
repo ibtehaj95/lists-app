@@ -8,6 +8,7 @@ module.exports = {
     },
     devServer: {
         port: 5000,
+        historyApiFallback: true,   //for react router
     },
     module: {
         rules: [

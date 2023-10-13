@@ -1,35 +1,20 @@
 import React, { useEffect, useState } from "react";
+import {Route, Routes} from "react-router-dom";
 
 function App (){
 
-    const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
-
-    const hitServer = async () => {
-        const resp = await fetch(`${apiURL}/auth/login`, {
-            method: "POST",
-            // mode: "cors", // no-cors, *cors, same-origin
-            // credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-              },
-            body: JSON.stringify({
-                "email": "alex@email.com",
-                "password": "secret",
-            }),
-        });
-        const respresp = await resp.json();
-        console.log(respresp);
-    }
-
     useEffect(() => {
-        console.log("UseEffect");
-        hitServer();
+        console.log("Working");
     }, []);
 
     return(
         <div className="App">
-            The is a Webpack React App
+            <Routes>
+                <Route path="/" element={<h1>Root</h1>}></Route>
+                <Route path="/home" element={<h1>Home</h1>}></Route>
+                <Route path="/list" element={<h1>List</h1>}></Route>
+                <Route path="*" element={<h1>Not Found</h1>}></Route>
+            </Routes>
         </div>
     );
 }
