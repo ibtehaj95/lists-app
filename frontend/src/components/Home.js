@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ListWidget from "./ListWidget";
 import "./Home.css";
+import Button from '@mui/material/Button';
+import { Modal } from "@mui/material";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import NewList from "./NewList";
 
 const Home = () => {
 
     const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
     const [token, setToken] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NTI0MWIwNWJkYzg1Yzg2ZmMxZTNhNjgiLCJuYW1lIjoiQWxleCIsImlhdCI6MTY5NzIwODQ1NywiZXhwIjoxNjk5ODAwNDU3fQ.UNRrwtmrwPYna77Wqv2p4JJzStoRW90E5a0pj3ZA8Zo");
     const [lists, setLists] = useState([]);
+    const [showNewList, setShowNewList] = useState(false);
+    
+    const openNewListCreate = () => setShowNewList(true);
 
     const getAllLists = async () => {
         const resp = await fetch(`${apiURL}/lists`, {
@@ -30,7 +38,7 @@ const Home = () => {
 
     return(
         <div>
-            Home
+            <Button size="large" variant="contained" onClick={openNewListCreate}>New List</Button>
             <div className="card-container">
                 {lists.length > 0 && (
                     lists.map((list) => (
@@ -42,6 +50,12 @@ const Home = () => {
                     ))
                 )}
             </div>
+            {
+                showNewList === true && <NewList
+                    showModal = {showNewList}
+                    setShowModal = {setShowNewList}
+                ></NewList>
+            }
         </div>
     );
 }

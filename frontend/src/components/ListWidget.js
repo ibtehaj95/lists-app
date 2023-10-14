@@ -11,7 +11,7 @@ const ListWidget = (props) => {
     const navigateTo = useNavigate();
 
     const buttonClick = () => {
-        console.log(props);
+        // console.log(props);
         navigateTo(`/list/${props.id}`);    //take the user to the specific list page
     };
     

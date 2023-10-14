@@ -1,3 +1,14 @@
 .card-container{
     display: flex;
 }
+
+/* .list-container{
+    display: flex;
+    height: 95vh;
+    justify-content: center;
+    align-items: center;
+} */
+
+.list-body{
+    margin: 0.5rem 0 0.5rem 0;
+}

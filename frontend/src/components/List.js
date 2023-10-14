@@ -6,6 +6,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from "react-router-dom";
 
 const List = () => {
 
@@ -13,9 +14,10 @@ const List = () => {
     const [token, setToken] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NTI0MWIwNWJkYzg1Yzg2ZmMxZTNhNjgiLCJuYW1lIjoiQWxleCIsImlhdCI6MTY5NzIwODQ1NywiZXhwIjoxNjk5ODAwNDU3fQ.UNRrwtmrwPYna77Wqv2p4JJzStoRW90E5a0pj3ZA8Zo");
     const [list, setList] = useState(null);
     const [listID] = useState(useParams().id);
+    const navigateTo = useNavigate();
 
-    const buttonClick = () => {
-        console.log("List Click!");
+    const goHome = () => {
+        navigateTo(`/home`);
     };
 
     const getList = async () => {
@@ -39,6 +41,7 @@ const List = () => {
 
     return(
         <div>
+            <Button size="large" variant="contained" onClick={goHome}>Home</Button>
             <div className="list-container">
                 {list !== null && (
                     <Card sx={{ minHeight: 250, minWidth: 250, margin: 2, display: "flex", flexDirection: "column", justifyContent: "center"}} raised={true}>
@@ -59,7 +62,7 @@ const List = () => {
                         }
                     </CardContent>
                     <CardActions sx={{ justifyContent: "center" }}>
-                        <Button disabled={true} size="small" variant="contained" onClick={buttonClick}>Open</Button>
+                        <Button disabled={true} size="small" variant="contained">Open</Button>
                     </CardActions>
                 </Card>
                 )}
