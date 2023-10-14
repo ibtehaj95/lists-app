@@ -4,12 +4,15 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from "react-router-dom";
 
 const ListWidget = (props) => {
 
+    const navigateTo = useNavigate();
+
     const buttonClick = () => {
-        console.log("Card Click");
-        //take the user to the specific list page
+        console.log(props);
+        navigateTo(`/list/${props.id}`);    //take the user to the specific list page
     };
     
     return(
