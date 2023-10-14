@@ -1,2 +1,2 @@
-npm start --prefix ./backend
-# npm start --prefix ./frontend
+gnome-terminal -- npm start --prefix ./backend
+gnome-terminal -- npm run serve --prefix ./frontend
