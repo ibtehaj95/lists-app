@@ -1,29 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Modal, TextField } from '@mui/material';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveIcon from '@mui/icons-material/Remove';
+import ClearIcon from '@mui/icons-material/Clear';
+import { useNavigate } from "react-router-dom";
 
 const NewList = (props) => {
 
+    const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
+    const [token, setToken] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NTI0MWIwNWJkYzg1Yzg2ZmMxZTNhNjgiLCJuYW1lIjoiQWxleCIsImlhdCI6MTY5NzIwODQ1NywiZXhwIjoxNjk5ODAwNDU3fQ.UNRrwtmrwPYna77Wqv2p4JJzStoRW90E5a0pj3ZA8Zo");
     const [newListTitle, setNewListTitle] = useState("Untitled");
     const [newListItems, setNewListItems] = useState([]);
-
-    const closeNewListCreate = () => props.setShowModal(false);
-
-    const createNewList = () => {
-        console.log("Create New List");
-        closeNewListCreate();
-    };
-
-    const addItem = () => {
-        console.log("Add Item to List");
-        setNewListItems((prev) => [
-            ...prev,
-            `Item ${prev.length}`,
-        ]);
-    }
+    const navigateTo = useNavigate();
 
     const style = {
         position: 'absolute',
@@ -38,6 +31,57 @@ const NewList = (props) => {
         flexDirection: "column", 
         justifyContent: "center"
     };
+
+    const closeNewListCreate = () => props.setShowModal(false);
+
+    const createNewList = async () => {
+        // console.log("Create New List");
+        const data = {
+            title: newListTitle,
+        };
+        if(newListItems.length > 0){
+
+            data.items = newListItems
+        }
+        console.log(data);
+        await fetch(`${apiURL}/lists`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+                },
+            body: JSON.stringify(data),
+        }).then((resp) => resp.json());
+        navigateTo(0); //reload homepage
+        closeNewListCreate();
+    };
+
+    const addItem = () => {
+        // console.log("Add Item to List");
+        setNewListItems((prev) => [
+            ...prev,
+            `Item`,
+        ]);
+    };
+
+    const editItem = (value, index) => {
+        // console.log("Edit List Item");
+        let updatedNewListItems = [...newListItems];
+        updatedNewListItems[index] = value;
+        setNewListItems(updatedNewListItems);
+    };
+
+    const removeItem = (pIndex) => {
+        // console.log("Remove List Item", pIndex);
+        const updatedNewListItems = newListItems.filter((item, index) => (index !== pIndex && item));
+        setNewListItems(updatedNewListItems);
+    };
+
+    useEffect(() => {
+
+        console.log(newListItems);
+
+    }, [newListItems]);
     
     return(
         <Modal
@@ -49,22 +93,36 @@ const NewList = (props) => {
             
                 <Card sx={ style } raised={true}>
                     <CardContent sx={{ paddingY: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <Typography variant="h5" component="div" sx={{ paddingTop: 2 }}>
+                        <Typography variant="h5" component="div">
+                            Create a New List
+                        </Typography>
                         <TextField
                             required
                             id="outlined-required"
                             label="List Name"
-                            defaultValue={newListTitle}
-                            onChange={setNewListTitle}
+                            value={newListTitle}
+                            onChange={(event) => setNewListTitle(event.target.value)}
+                            sx={{ marginTop: 2 }}
                         />
-                        </Typography>
                         {
                             <div className="list-body">
                             {
                                 newListItems.length > 0 && newListItems.map((item, index) => (
-                                    <Typography key={index} variant="body2">
-                                        {item}
-                                    </Typography>
+                                    <div className="item-group" key={index}>
+                                        <TextField
+                                            required
+                                            id="outlined-required"
+                                            label="List Item"
+                                            value={item}
+                                            size="small"
+                                            sx={{ marginTop: 2 }}
+                                            onChange={(event) => {editItem(event.target.value, index)}}
+                                        />
+                                        <IconButton aria-label="delete" size="small" sx={{ marginTop: 2, marginLeft: 1 }} onClick={(event) => {removeItem(index)}}>
+                                            <ClearIcon />
+                                        </IconButton>
+                                    </div>
+                                    
                                 ))
                             }    
                             </div>

@@ -16,7 +16,7 @@ const ListWidget = (props) => {
     };
     
     return(
-        <Card sx={{ minWidth: 275, maxWidth: 500, margin: 2 }} raised={true}>
+        <Card sx={{ minWidth: 250, maxWidth: 500, margin: 2 }} raised={true}>
             <CardContent>
                 <Typography variant="h5" component="div">
                     {props.title}

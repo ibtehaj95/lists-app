@@ -7,4 +7,11 @@
 
 .list-body{
     margin: 0.5rem 0 0.5rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-group{
+    display: flex;
+    align-items: center;
 }
