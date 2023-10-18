@@ -118,7 +118,12 @@ const NewList = (props) => {
                                             sx={{ marginTop: 2 }}
                                             onChange={(event) => {editItem(event.target.value, index)}}
                                         />
-                                        <IconButton aria-label="delete" size="small" sx={{ marginTop: 2, marginLeft: 1 }} onClick={(event) => {removeItem(index)}}>
+                                        <IconButton 
+                                            aria-label="delete" 
+                                            size="small" 
+                                            sx={{ marginTop: 2, marginLeft: 1 }} 
+                                            onClick={(event) => {removeItem(index)}}
+                                        >
                                             <ClearIcon />
                                         </IconButton>
                                     </div>
