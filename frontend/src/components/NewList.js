@@ -38,22 +38,35 @@ const NewList = (props) => {
         // console.log("Create New List");
         const data = {
             title: newListTitle,
+            items: newListItems,
         };
-        if(newListItems.length > 0){
+        // if(newListItems.length > 0){
 
-            data.items = newListItems
+        //     data.items = newListItems
+        // }
+        // console.log(data);
+        
+        try{
+            const resp = await fetch(`${apiURL}/lists`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    },
+                body: JSON.stringify(data),
+            });
+            if(resp.ok === true){
+                navigateTo(0); //reload homepage
+                closeNewListCreate();
+                // toast.success('Fetched');
+            }
+            else{
+                toast.warn("Response Not Okay!");
+            }
         }
-        console.log(data);
-        await fetch(`${apiURL}/lists`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-                },
-            body: JSON.stringify(data),
-        }).then((resp) => resp.json());
-        navigateTo(0); //reload homepage
-        closeNewListCreate();
+        catch (error){
+            console.log("Failed to Fetch", error);
+        }
     };
 
     const addItem = () => {

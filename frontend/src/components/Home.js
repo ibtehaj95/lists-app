@@ -3,6 +3,8 @@ import ListWidget from "./ListWidget";
 import "./Home.css";
 import Button from '@mui/material/Button';
 import NewList from "./NewList";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 const Home = () => {
 
@@ -14,14 +16,27 @@ const Home = () => {
     const openNewListCreate = () => setShowNewList(true);
 
     const getAllLists = async () => {
-        const resp = await fetch(`${apiURL}/lists`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-                },
-        }).then((resp) => resp.json());
-        setLists(resp.lists);
+        try{
+            const resp = await fetch(`${apiURL}/lists`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    },
+            });
+            if(resp.ok === true){
+                const respBody = await resp.json();
+                setLists(respBody.lists);
+                // toast.success('Fetched');
+            }
+            else{
+                toast.warn("Response Not Okay!");
+            }
+        }
+        catch (error){
+            console.log("Failed to Fetch", error);
+            toast.error("Failed to Fetch");
+        }
     };
 
     useEffect(() => {
@@ -53,6 +68,18 @@ const Home = () => {
                     setShowModal = {setShowNewList}
                 ></NewList>
             }
+            <ToastContainer
+                position="top-right"
+                autoClose={2}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable={false}
+                pauseOnHover
+                theme="dark"
+            />
         </div>
     );
 }
