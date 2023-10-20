@@ -31,6 +31,8 @@ const Home = () => {
             }
             else{
                 toast.warn("Response Not Okay!");
+                const error = await resp.json();
+                console.log("Failed to Fetch", error);
             }
         }
         catch (error){
@@ -58,6 +60,7 @@ const Home = () => {
                             id = {list._id}
                             key = {list._id}
                             title = {list.title}
+                            completed = {list.completed}
                         ></ListWidget>
                     ))
                 )}

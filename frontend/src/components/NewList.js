@@ -63,10 +63,12 @@ const NewList = (props) => {
             }
             else{
                 toast.warn("Response Not Okay!");
+                const error = await resp.json();
+                console.log("Failed to Create", error);
             }
         }
         catch (error){
-            console.log("Failed to Fetch", error);
+            console.log("Failed to Create", error);
             toast.warn("Response Not Okay!");
         }
     };
@@ -75,14 +77,20 @@ const NewList = (props) => {
         // console.log("Add Item to List");
         setNewListItems((prev) => [
             ...prev,
-            `Item`,
+            {
+                name: "Item",
+                completed: false,
+            },
         ]);
     };
 
     const editItem = (value, index) => {
         // console.log("Edit List Item");
         let updatedNewListItems = [...newListItems];
-        updatedNewListItems[index] = value;
+        updatedNewListItems[index] = {
+            name: value,
+            completed: false,
+        };
         setNewListItems(updatedNewListItems);
     };
 
@@ -128,7 +136,7 @@ const NewList = (props) => {
                                             required
                                             id="outlined-required"
                                             label="List Item"
-                                            value={item}
+                                            value={item.name}
                                             size="small"
                                             sx={{ marginTop: 2 }}
                                             onChange={(event) => {editItem(event.target.value, index)}}

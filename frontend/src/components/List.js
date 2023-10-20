@@ -7,7 +7,9 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
+import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 import { useNavigate } from "react-router-dom";
 import { useTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
@@ -53,6 +55,8 @@ const List = () => {
             }
             else{
                 toast.warn("Response Not Okay!");
+                const error = await resp.json();
+                console.log("Failed to Create", error);
             }
         }
         catch{
@@ -93,6 +97,8 @@ const List = () => {
             }
             else{
                 toast.warn("Response Not Okay!");
+                const error = await resp.json();
+                console.log("Failed to Create", error);
             }
         }
         catch (error){
@@ -117,6 +123,8 @@ const List = () => {
             }
             else{
                 toast.warn("Response Not Okay!");
+                const error = await resp.json();
+                console.log("Failed to Create", error);
             }
         }
         catch (error){
@@ -125,9 +133,26 @@ const List = () => {
         }
     };
 
-    const handleListCompleted = () => {
-        console.log("Change Completed Status");
-        setListCompleted((prev) => !prev);
+    const checkIfListComplete = () => {
+        console.log("Checking List Completion");
+        const res = listItems.every((item) => item.completed === true);
+        if(res === true){
+            setListCompleted(true);
+        }
+        else{
+            setListCompleted(false);
+        }
+    };
+
+    const handleItemCompleted = (index) => {
+        console.log("Change Completed Status - Item");
+        let updatedListItems = [...listItems];
+        updatedListItems[index] = {
+            ...updatedListItems[index],
+            completed: !updatedListItems[index].completed,
+        };
+        setListItems(updatedListItems);
+        // checkIfListComplete(updatedListItems); //needed to pass argument. Less elegant
     };
 
     const cancelChanges = () => {
@@ -142,14 +167,20 @@ const List = () => {
         // console.log("Add Item to List");
         setListItems((prev) => [
             ...prev,
-            `Item`,
+            {
+                name: "Item",
+                completed: false,
+            },
         ]);
     };
 
     const editItem = (value, index) => {
         // console.log("Edit List Item");
         let updatedListItems = [...listItems];
-        updatedListItems[index] = value;
+        updatedListItems[index] = {
+            name: value,
+            completed: false,
+        };
         setListItems(updatedListItems);
     };
 
@@ -169,6 +200,7 @@ const List = () => {
             listItems,
             listCompleted
         });
+        checkIfListComplete();
     }, [listItems]);
 
     return(
@@ -200,7 +232,7 @@ const List = () => {
                                         onChange={(event) => setListTitle(event.target.value)}
                                         sx={{ marginTop: 2 }}
                                     />
-                                    <Button size="small" variant="contained" color={listCompleted ? "success" : "error"} onClick={handleListCompleted} sx={{ marginX: 1, marginTop: 1.5, paddingX: 1 }}>{listCompleted ? "Complete" : "Incomplete"}</Button>
+                                    <Button size="small" variant="contained" color={listCompleted ? "success" : "error"} disableElevation sx={{ marginX: 1, marginTop: 1.5, paddingX: 1, "pointerEvents": "none"}}>{listCompleted ? "Complete" : "Incomplete"}</Button>
                                 </div>
                             )
                         }
@@ -208,19 +240,22 @@ const List = () => {
                             <div className="list-body">
                             {
                                 listItems.length > 0 && editable === false && listItems.map((item, index) => (
-                                    <Typography key={index} variant="subtitle1">
-                                        {item}
+                                    <Typography key={index} variant="subtitle1" style = {{ textDecoration: item.completed ? 'line-through' : 'none' }}>
+                                        {`${index+1} - ${item.name}`}
                                     </Typography>
                                 ))
                             }
                             {
                                 listItems.length > 0 && editable === true && listItems.map((item, index) => (
                                     <div className="item-group" key={index}>
+                                        <Typography variant="body1" sx = {{ marginTop: 2, minWidth: 0.1 }}>
+                                            {`${index+1} - `}
+                                        </Typography>
                                         <TextField
                                             required
                                             id="outlined-required"
                                             label="List Item"
-                                            value={item}
+                                            value={item.name}
                                             size="small"
                                             sx={{ marginTop: 2 }}
                                             onChange={(event) => {editItem(event.target.value, index)}}
@@ -231,7 +266,15 @@ const List = () => {
                                             sx={{ marginTop: 2, marginLeft: 1 }} 
                                             onClick={(event) => {removeItem(index)}}
                                         >
-                                            <ClearIcon />
+                                            <DeleteIcon />
+                                        </IconButton>
+                                        <IconButton 
+                                            aria-label="delete" 
+                                            size="small" 
+                                            sx={{ marginTop: 2, marginLeft: 1 }} 
+                                            onClick={ (event) => {handleItemCompleted(index)} }
+                                        >
+                                            {item.completed === true ? <CheckIcon color="success"></CheckIcon> : <PendingOutlinedIcon></PendingOutlinedIcon>}
                                         </IconButton>
                                     </div>
                                 ))
