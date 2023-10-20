@@ -3,7 +3,7 @@ import ListWidget from "./ListWidget";
 import "./Home.css";
 import Button from '@mui/material/Button';
 import NewList from "./NewList";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 const Home = () => {
@@ -68,18 +68,6 @@ const Home = () => {
                     setShowModal = {setShowNewList}
                 ></NewList>
             }
-            <ToastContainer
-                position="top-right"
-                autoClose={2}
-                hideProgressBar
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable={false}
-                pauseOnHover
-                theme="dark"
-            />
         </div>
     );
 }

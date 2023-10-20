@@ -24,14 +24,14 @@ const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
 // middleware-use
+app.use(cors()); //has to be at the top, of all these, doesn't work otherwise
 app.set("trust proxy", 1);  //for reverse proxy servers like Nginx
 app.use(rateLimiter({
   windowMs: 15 * 60 * 1000, //15 mins
-  max: 100, //100 reqs during ths windowMs
+  max: 1000, //1000 reqs during ths windowMs
 }));
 app.use(express.json());  //to be able to read JSON in req.body
 app.use(helmet());
-app.use(cors());
 app.use(xss());
 
 // routes

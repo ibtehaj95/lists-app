@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from "react-router-dom";
 import { useTheme } from '@mui/material/styles';
+import { toast } from 'react-toastify';
 
 const List = () => {
 
@@ -39,56 +40,88 @@ const List = () => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                     },
-            }).then((resp) => resp.json());
-            setListItems(resp.list.items);
-            setListItemsOld(resp.list.items);
-            setListTitle(resp.list.title);
-            setListTitleOld(resp.list.title);
-            setListCompletedOld(resp.list.completed);
+            });
+            if(resp.ok === true){
+                const respBody = await resp.json();
+                setListItems(respBody.list.items);
+                setListTitle(respBody.list.title);
+                setListCompleted(respBody.list.completed);
+                setListItemsOld(respBody.list.items);
+                setListTitleOld(respBody.list.title);
+                setListCompletedOld(respBody.list.completed);
+                // toast.success('Fetched');
+            }
+            else{
+                toast.warn("Response Not Okay!");
+            }
         }
         catch{
             console.log("Failed to Fetch");
+            toast.warn("Response Not Okay!");
         }
     };
 
     const editList = async () => {
         console.log("Edit List");
-    try{
-        const data = {
-            title: listTitle,
-            items: listItems,
-            completed: listCompleted,
-        };
-        console.log(data);
-        await fetch(`${apiURL}/lists/${listID}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-                },
-            body: JSON.stringify(data),
-        }).then((resp) => resp.json());
-        setEditable((prev) => !prev); //put this in success status only
-    }
-    catch (error){
-        console.log("Failed to Fetch", error);
-    }
+        //distinguish b/w edit start and edit save to DB
+        // console.log("Editable", editable); //false when edit start, true when save
+        if(editable === false){
+            setListItemsOld(listItems);
+            setListTitleOld(listTitle);
+            setListCompletedOld(listCompleted);
+            setEditable((prev) => !prev);
+            return;
+        }
+        try{
+            const data = {
+                title: listTitle,
+                items: listItems,
+                completed: listCompleted,
+            };
+            // console.log(data);
+            const resp = await fetch(`${apiURL}/lists/${listID}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    },
+                body: JSON.stringify(data),
+            });
+            if(resp.ok === true){
+                setEditable((prev) => !prev);
+                toast.success('Updated!');
+            }
+            else{
+                toast.warn("Response Not Okay!");
+            }
+        }
+        catch (error){
+            console.log("Failed to Fetch", error);
+            toast.warn("Response Not Okay!");
+        }
     };
 
     const deleteList = async () => {
         console.log("Delete List");
         try{
-            await fetch(`${apiURL}/lists/${listID}`, {
+            const resp = await fetch(`${apiURL}/lists/${listID}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                     },
-            }).then((resp) => resp.json());
-            goHome(); //put this in success status only
+            });
+            if(resp.ok === true){
+                toast.success('Deleted');
+                goHome();
+            }
+            else{
+                toast.warn("Response Not Okay!");
+            }
         }
         catch (error){
             console.log("Failed to Fetch", error);
+            toast.warn("Response Not Okay!");
         }
     };
 

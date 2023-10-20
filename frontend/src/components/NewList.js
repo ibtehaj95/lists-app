@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 const NewList = (props) => {
 
@@ -56,9 +57,9 @@ const NewList = (props) => {
                 body: JSON.stringify(data),
             });
             if(resp.ok === true){
-                navigateTo(0); //reload homepage
                 closeNewListCreate();
-                // toast.success('Fetched');
+                toast.success('Created'); //toast won't appear, since we reload page
+                navigateTo(0); //reload homepage
             }
             else{
                 toast.warn("Response Not Okay!");
@@ -66,6 +67,7 @@ const NewList = (props) => {
         }
         catch (error){
             console.log("Failed to Fetch", error);
+            toast.warn("Response Not Okay!");
         }
     };
 
