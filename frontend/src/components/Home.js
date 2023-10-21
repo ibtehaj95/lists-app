@@ -5,13 +5,16 @@ import Button from '@mui/material/Button';
 import NewList from "./NewList";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import AddIcon from '@mui/icons-material/Add';
+import { useLocation } from 'react-router-dom';
 
-const Home = () => {
+const Home = (props) => {
 
     const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
     const [token, setToken] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NTI0MWIwNWJkYzg1Yzg2ZmMxZTNhNjgiLCJuYW1lIjoiQWxleCIsImlhdCI6MTY5NzIwODQ1NywiZXhwIjoxNjk5ODAwNDU3fQ.UNRrwtmrwPYna77Wqv2p4JJzStoRW90E5a0pj3ZA8Zo");
     const [lists, setLists] = useState([]);
     const [showNewList, setShowNewList] = useState(false);
+    const [location] = useState(useLocation());
     
     const openNewListCreate = () => setShowNewList(true);
 
@@ -43,6 +46,9 @@ const Home = () => {
 
     useEffect(() => {
         console.log("Home");
+        if(location){
+            props.setLocation(location.pathname.split("/")[1].toUpperCase());
+        }
         getAllLists();
     }, []);
 
@@ -52,7 +58,7 @@ const Home = () => {
 
     return(
         <div>
-            <Button size="large" variant="contained" onClick={openNewListCreate}>New List</Button>
+            <Button variant="contained" onClick={openNewListCreate} startIcon={<AddIcon></AddIcon>}>New List</Button>
             <div className="card-container">
                 {lists.length > 0 && (
                     lists.map((list) => (

@@ -58,7 +58,7 @@ const NewList = (props) => {
             });
             if(resp.ok === true){
                 closeNewListCreate();
-                toast.success('Created'); //toast won't appear, since we reload page
+                // toast.success('Created'); //toast won't appear, since we reload page
                 navigateTo(0); //reload homepage
             }
             else{

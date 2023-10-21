@@ -33,6 +33,7 @@ app.use(rateLimiter({
 app.use(express.json());  //to be able to read JSON in req.body
 app.use(helmet());
 app.use(xss());
+app.use(express.static('public'));
 
 // routes
 app.use("/api/v1/auth", authRouter);

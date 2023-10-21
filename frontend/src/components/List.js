@@ -13,8 +13,9 @@ import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 import { useNavigate } from "react-router-dom";
 import { useTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
-const List = () => {
+const List = (props) => {
 
     const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
     const [token, setToken] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NTI0MWIwNWJkYzg1Yzg2ZmMxZTNhNjgiLCJuYW1lIjoiQWxleCIsImlhdCI6MTY5NzIwODQ1NywiZXhwIjoxNjk5ODAwNDU3fQ.UNRrwtmrwPYna77Wqv2p4JJzStoRW90E5a0pj3ZA8Zo");
@@ -27,6 +28,7 @@ const List = () => {
     const [listID] = useState(useParams().id);
     const [editable, setEditable] = useState(false);
     const navigateTo = useNavigate();
+    const [location] = useState(useLocation());
 
     const theme = useTheme();
 
@@ -134,7 +136,7 @@ const List = () => {
     };
 
     const checkIfListComplete = () => {
-        console.log("Checking List Completion");
+        // console.log("Checking List Completion");
         const res = listItems.every((item) => item.completed === true);
         if(res === true){
             setListCompleted(true);
@@ -192,6 +194,9 @@ const List = () => {
 
     useEffect(() => {
         getList();
+        if(location){
+            props.setLocation(location.pathname.split("/")[1].toUpperCase());
+        }
     }, []);
 
     useEffect(() => {
@@ -205,7 +210,6 @@ const List = () => {
 
     return(
         <div>
-            <Button size="large" variant="contained" onClick={goHome}>Home</Button>
             <div className="list-container">
                 {listTitle !== null && (
                     <Card sx={{ minHeight: 250, minWidth: 250, margin: 2, display: "flex", flexDirection: "column", justifyContent: "center"}} raised={true}>
@@ -302,4 +306,4 @@ const List = () => {
     );
 }
 
-export default List;
+export {List};

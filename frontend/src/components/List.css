@@ -1,6 +1,6 @@
 .list-container{
     display: flex;
-    height: 95vh;
+    height: 100%;
     justify-content: center;
     align-items: center;
 }
