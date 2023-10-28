@@ -209,99 +209,97 @@ const List = (props) => {
     }, [listItems]);
 
     return(
-        <div>
-            <div className="list-container">
-                {listTitle !== null && (
-                    <Card sx={{ minHeight: 250, minWidth: 250, margin: 2, display: "flex", flexDirection: "column", justifyContent: "center"}} raised={true}>
-                    <CardContent sx={{ paddingY: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div className="list-container">
+            {listTitle !== null && (
+                <Card sx={{ minHeight: 250, minWidth: 250, margin: 2, display: "flex", flexDirection: "column", justifyContent: "center"}} raised={true}>
+                <CardContent sx={{ paddingY: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    {
+                        listTitle !== undefined && editable === false && (
+                            <div className="title-div">
+                                <Typography variant="h5" component="div">
+                                    {listTitle}
+                                </Typography>
+                                <Button variant="contained" color={listCompleted ? "success" : "error"} size="small" disableElevation sx={{ margin: 1, paddingX: 1, "pointerEvents": "none"}}>{listCompleted ? "Complete" : "Incomplete"}</Button>
+                                {/* In the line above, disabling pointer events takes care of click disable and point change, hence no need for "&:hover": { backgroundColor: theme.palette.success.main, cursor: "default"}*/}
+                            </div>
+                        )
+                    }
+                    {
+                        listTitle !== undefined && editable === true && (
+                            <div className="title-div">
+                                <TextField
+                                    required
+                                    id="outlined-required"
+                                    label="List Name"
+                                    value={listTitle}
+                                    onChange={(event) => setListTitle(event.target.value)}
+                                    sx={{ marginTop: 2 }}
+                                />
+                                <Button size="small" variant="contained" color={listCompleted ? "success" : "error"} disableElevation sx={{ marginX: 1, marginTop: 1.5, paddingX: 1, "pointerEvents": "none"}}>{listCompleted ? "Complete" : "Incomplete"}</Button>
+                            </div>
+                        )
+                    }
+                    {
+                        <div className="list-body">
                         {
-                            listTitle !== undefined && editable === false && (
-                                <div className="title-div">
-                                    <Typography variant="h5" component="div">
-                                        {listTitle}
-                                    </Typography>
-                                    <Button variant="contained" color={listCompleted ? "success" : "error"} size="small" disableElevation sx={{ margin: 1, paddingX: 1, "pointerEvents": "none"}}>{listCompleted ? "Complete" : "Incomplete"}</Button>
-                                    {/* In the line above, disabling pointer events takes care of click disable and point change, hence no need for "&:hover": { backgroundColor: theme.palette.success.main, cursor: "default"}*/}
-                                </div>
-                            )
+                            listItems.length > 0 && editable === false && listItems.map((item, index) => (
+                                <Typography key={index} variant="subtitle1" style = {{ textDecoration: item.completed ? 'line-through' : 'none' }}>
+                                    {`${index+1} - ${item.name}`}
+                                </Typography>
+                            ))
                         }
                         {
-                            listTitle !== undefined && editable === true && (
-                                <div className="title-div">
+                            listItems.length > 0 && editable === true && listItems.map((item, index) => (
+                                <div className="item-group" key={index}>
+                                    <Typography variant="body1" sx = {{ marginTop: 2, minWidth: 0.1 }}>
+                                        {`${index+1} - `}
+                                    </Typography>
                                     <TextField
                                         required
                                         id="outlined-required"
-                                        label="List Name"
-                                        value={listTitle}
-                                        onChange={(event) => setListTitle(event.target.value)}
+                                        label="List Item"
+                                        value={item.name}
+                                        size="small"
                                         sx={{ marginTop: 2 }}
+                                        onChange={(event) => {editItem(event.target.value, index)}}
                                     />
-                                    <Button size="small" variant="contained" color={listCompleted ? "success" : "error"} disableElevation sx={{ marginX: 1, marginTop: 1.5, paddingX: 1, "pointerEvents": "none"}}>{listCompleted ? "Complete" : "Incomplete"}</Button>
+                                    <IconButton 
+                                        aria-label="delete" 
+                                        size="small" 
+                                        sx={{ marginTop: 2, marginLeft: 1 }} 
+                                        onClick={(event) => {removeItem(index)}}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                    <IconButton 
+                                        aria-label="delete" 
+                                        size="small" 
+                                        sx={{ marginTop: 2, marginLeft: 1 }} 
+                                        onClick={ (event) => {handleItemCompleted(index)} }
+                                    >
+                                        {item.completed === true ? <CheckIcon color="success"></CheckIcon> : <PendingOutlinedIcon></PendingOutlinedIcon>}
+                                    </IconButton>
                                 </div>
-                            )
-                        }
-                        {
-                            <div className="list-body">
-                            {
-                                listItems.length > 0 && editable === false && listItems.map((item, index) => (
-                                    <Typography key={index} variant="subtitle1" style = {{ textDecoration: item.completed ? 'line-through' : 'none' }}>
-                                        {`${index+1} - ${item.name}`}
-                                    </Typography>
-                                ))
-                            }
-                            {
-                                listItems.length > 0 && editable === true && listItems.map((item, index) => (
-                                    <div className="item-group" key={index}>
-                                        <Typography variant="body1" sx = {{ marginTop: 2, minWidth: 0.1 }}>
-                                            {`${index+1} - `}
-                                        </Typography>
-                                        <TextField
-                                            required
-                                            id="outlined-required"
-                                            label="List Item"
-                                            value={item.name}
-                                            size="small"
-                                            sx={{ marginTop: 2 }}
-                                            onChange={(event) => {editItem(event.target.value, index)}}
-                                        />
-                                        <IconButton 
-                                            aria-label="delete" 
-                                            size="small" 
-                                            sx={{ marginTop: 2, marginLeft: 1 }} 
-                                            onClick={(event) => {removeItem(index)}}
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                        <IconButton 
-                                            aria-label="delete" 
-                                            size="small" 
-                                            sx={{ marginTop: 2, marginLeft: 1 }} 
-                                            onClick={ (event) => {handleItemCompleted(index)} }
-                                        >
-                                            {item.completed === true ? <CheckIcon color="success"></CheckIcon> : <PendingOutlinedIcon></PendingOutlinedIcon>}
-                                        </IconButton>
-                                    </div>
-                                ))
-                            }   
+                            ))
+                        }   
+                        </div>
+                    }
+                </CardContent>
+                <CardActions sx={{ justifyContent: "center" }}>
+                    <Button size="small" variant="contained" color="success" onClick={editList}>{ editable === false ? "Edit" : "Save" }</Button>
+                    {
+                        editable === false ?
+                        (<Button size="small" variant="contained" color="error" onClick={deleteList}>Delete</Button>):
+                        (
+                            <div>
+                                <Button size="small" variant="contained" color="primary" onClick={addItem} sx={{ marginLeft: 1 }}>Add Item</Button>
+                                <Button size="small" variant="contained" color="error" onClick={cancelChanges} sx={{ marginLeft: 1 }}>Cancel</Button>
                             </div>
-                        }
-                    </CardContent>
-                    <CardActions sx={{ justifyContent: "center" }}>
-                        <Button size="small" variant="contained" color="success" onClick={editList}>{ editable === false ? "Edit" : "Save" }</Button>
-                        {
-                            editable === false ?
-                            (<Button size="small" variant="contained" color="error" onClick={deleteList}>Delete</Button>):
-                            (
-                                <div>
-                                    <Button size="small" variant="contained" color="primary" onClick={addItem} sx={{ marginLeft: 1 }}>Add Item</Button>
-                                    <Button size="small" variant="contained" color="error" onClick={cancelChanges} sx={{ marginLeft: 1 }}>Cancel</Button>
-                                </div>
-                            )
-                        }
-                    </CardActions>
-                </Card>
-                )}
-            </div>
+                        )
+                    }
+                </CardActions>
+            </Card>
+            )}
         </div>
     );
 }

@@ -5,7 +5,6 @@ function PublicRoutes(){
 
     return (
         <div>
-            Public Route
             <Outlet></Outlet>
         </div>
     );
