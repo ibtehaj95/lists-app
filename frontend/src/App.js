@@ -28,8 +28,6 @@ function App (){
                     <Route path="/login" element={<Login setLocation = {setLocation} ></Login>}></Route>
                     <Route path="/register" element={<Register setLocation = {setLocation} ></Register>}></Route>
                     <Route path="/reset" element={<Reset setLocation = {setLocation} ></Reset>}></Route>
-                    <Route path="/trash" element={<Trash setLocation = {setLocation} ></Trash>}></Route>
-                    <Route path="/manage" element={<Manage setLocation = {setLocation} ></Manage>}></Route>
                     <Route path="*" element={<h1>Not Found</h1>}></Route>
                 </Route>
                 <Route element={
@@ -39,6 +37,8 @@ function App (){
                 >
                     <Route path="/home" element={<Home setLocation = {setLocation} ></Home>}></Route>
                     <Route path="/list/:id" element={<ListComp setLocation = {setLocation}></ListComp>}></Route>
+                    <Route path="/trash" element={<Trash setLocation = {setLocation} ></Trash>}></Route>
+                    <Route path="/manage" element={<Manage setLocation = {setLocation} ></Manage>}></Route>
                 </Route>
             </Routes>
             <ToastContainer

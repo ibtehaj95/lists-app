@@ -6,14 +6,17 @@ import NewList from "./NewList";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import AddIcon from '@mui/icons-material/Add';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 const Trash = (props) => {
 
     // const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
-    // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NTI0MWIwNWJkYzg1Yzg2ZmMxZTNhNjgiLCJuYW1lIjoiQWxleCIsImlhdCI6MTY5NzIwODQ1NywiZXhwIjoxNjk5ODAwNDU3fQ.UNRrwtmrwPYna77Wqv2p4JJzStoRW90E5a0pj3ZA8Zo");
     // const [lists, setLists] = useState([]);
     const [location] = useState(useLocation());
+    const [cookies] = useCookies(['token', "email"]);
+
+    const navigateTo = useNavigate();
 
     // const getAllLists = async () => {
     //     try{
@@ -48,9 +51,11 @@ const Trash = (props) => {
         }
     }, []);
 
-    // useEffect(() => {
-    //     console.log(lists);
-    // }, [lists]);
+    useEffect(() => {
+        if(cookies.email === undefined && cookies.token === undefined){
+            navigateTo(0); //reload
+        }
+    }, [cookies]);
 
     return(
         <div>

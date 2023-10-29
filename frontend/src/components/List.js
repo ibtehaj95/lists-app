@@ -10,10 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
-import { useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
 const List = (props) => {
@@ -208,6 +207,12 @@ const List = (props) => {
         });
         checkIfListComplete();
     }, [listItems]);
+
+    useEffect(() => {
+        if(cookies.email === undefined && cookies.token === undefined){
+            navigateTo(0); //reload
+        }
+    }, [cookies]);
 
     return(
         <div className="list-container">
