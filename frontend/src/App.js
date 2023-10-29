@@ -6,6 +6,7 @@ import Register from "./components/Register";
 import Trash from "./components/Trash";
 import Manage from "./components/Manage";
 import Reset from "./components/Reset";
+import Root from "./components/Root";
 import {List as ListComp} from "./components/List";
 import PrivateRoutes from './utils/PrivateRoutes';
 import PublicRoutes from './utils/PublicRoutes';
@@ -23,7 +24,7 @@ function App (){
         <div className="App">
             <Routes>
                 <Route element={<PublicRoutes></PublicRoutes>}>
-                    <Route path="/" element={<h1>Root</h1>}></Route>
+                    <Route path="/" element={<Root></Root>}></Route>
                     <Route path="/login" element={<Login setLocation = {setLocation} ></Login>}></Route>
                     <Route path="/register" element={<Register setLocation = {setLocation} ></Register>}></Route>
                     <Route path="/reset" element={<Reset setLocation = {setLocation} ></Reset>}></Route>

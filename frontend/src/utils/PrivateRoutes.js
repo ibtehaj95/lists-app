@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import userContext from '../utils/UserContext';
 import { Outlet, useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -23,39 +22,83 @@ import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
+import { useCookies } from 'react-cookie';
+import { toast } from 'react-toastify';
 
 const drawerWidth = 240;
 const settings = ['Profile Settings', 'Logout'];
 
 function PrivateRoutes(props){
-    // const {userObj} = React.useContext(userContext);
-    // const navigateTo = useNavigate();
-    // console.log(userObj.name);
-    // console.log(userObj.name==="loggedOut"?"loggedOut":"legitUser");
-    // <Navigate to="/login"></Navigate>;
-    //this could also have been used in the ternary in the return statement
-    //Would have also been simpler. 
-    //But the React team suggests useNavigate in functional components
-
-    // useEffect(() => {
-    //     userObj.name==="loggedOut" && navigateTo("/login");
-    // },[userObj.name, navigateTo]);
 
     const navigateTo = useNavigate();
+    const [cookies, removeCookie] = useCookies(['token', "email"]);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const [userVerified, setUserVerified] = useState(false);
+    const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
         };
     
-        const handleCloseUserMenu = () => {
+    const handleCloseUserMenu = () => {
         setAnchorElUser(null);
         };
+    
+    const verifyCookies = async (email, token) => {
+        try{
+            const resp = await fetch(`${apiURL}/auth/verify`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    },
+                body: JSON.stringify({
+                    email: email,
+                    token: token,
+                }),
+            });
+            if(resp.ok === true){
+                setUserVerified(true);
+                // toast.success('Verified');
+            }
+            else{
+                toast.warn("Invalid Credentials!");
+                const error = await resp.json();
+                console.log("Invalid Credentials!", error);
+                navigateTo(`/login`);
+            }
+        }
+        catch (error){
+            console.log("Failed to Login", error);
+            toast.error("Failed to Login");
+        }
+    };
+
+    useEffect(() => {
+        //if tokens exist, verify, otherwise redirect to login
+        if(cookies.email === "undefined" && cookies.token === "undefined"){
+            navigateTo(`/login`);
+        }
+        else if(cookies.email && cookies.token){
+            verifyCookies(cookies.email, cookies.token);
+        }
+        else{
+            navigateTo(`/login`);
+        }
+    }, []);
+
+    // useEffect(() => {
+
+    //     console.log("Cookie Change", cookies);
+        
+    //     if(cookies.email === undefined && cookies.token === undefined){
+    //         navigateTo(`/login`);
+    //     }
+
+    // }, [cookies]);
 
     return (
-        // userObj.name!=="loggedOut" && <Outlet></Outlet>
-        // 1>0 && <Outlet></Outlet>
-        1 > 0 && 
+        
+        userVerified && 
         (
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
@@ -87,9 +130,19 @@ function PrivateRoutes(props){
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
                                 >
-                                {settings.map((setting) => (
+                                {settings.map((setting, index) => (
                                     <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
+                                    <Typography textAlign="center" onClick={(e) => {
+                                        if(index === 0){
+                                            //show user profile
+                                            console.log("Show User Profile");
+                                        }
+                                        else if(index === 1){
+                                            //logout
+                                            removeCookie("token");
+                                            removeCookie("email");
+                                        }
+                                    }}>{setting}</Typography>
                                     </MenuItem>
                                 ))}
                                 </Menu>

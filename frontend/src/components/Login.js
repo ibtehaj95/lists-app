@@ -12,12 +12,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 const Login = (props) => {
 
     const navigateTo = useNavigate();
-    // const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
-    // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NTI0MWIwNWJkYzg1Yzg2ZmMxZTNhNjgiLCJuYW1lIjoiQWxleCIsImlhdCI6MTY5NzIwODQ1NywiZXhwIjoxNjk5ODAwNDU3fQ.UNRrwtmrwPYna77Wqv2p4JJzStoRW90E5a0pj3ZA8Zo");
+    const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
     const [location] = useState(useLocation());
     const [passVis, setPassVis] = useState(false);
     const [emailRegExp] = useState(new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/)); //https://stackoverflow.com/a/201378/17235798
@@ -28,6 +28,7 @@ const Login = (props) => {
         email: "username@domain.com",
         password: "",
     });
+    const [cookies, setCookie] = useCookies(['token', "email"]);
 
     const updateForm = (value, key) => {
         if(key === "email"){
@@ -45,7 +46,6 @@ const Login = (props) => {
 
     const processData = () => {
         console.log("Process Data");
-        console.log(formVals);
         //validate
         //email regex
         if(emailRegExp.test(formVals.email) !== true){
@@ -58,44 +58,52 @@ const Login = (props) => {
             return
         }
         //send
+        login();
     };
 
-    // const getAllLists = async () => {
-    //     try{
-    //         const resp = await fetch(`${apiURL}/lists`, {
-    //             method: "GET",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 "Authorization": `Bearer ${token}`,
-    //                 },
-    //         });
-    //         if(resp.ok === true){
-    //             const respBody = await resp.json();
-    //             setLists(respBody.lists);
-    //             // toast.success('Fetched');
-    //         }
-    //         else{
-    //             toast.warn("Response Not Okay!");
-    //             const error = await resp.json();
-    //             console.log("Failed to Fetch", error);
-    //         }
-    //     }
-    //     catch (error){
-    //         console.log("Failed to Fetch", error);
-    //         toast.error("Failed to Fetch");
-    //     }
-    // };
+    const login = async () => {
+        try{
+            const resp = await fetch(`${apiURL}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    },
+                body: JSON.stringify(formVals),
+            });
+            if(resp.ok === true){
+                const {token, user: {email}} = await resp.json();
+                // console.log(email, token);
+                setCookie("token", token);
+                setCookie("email", email);
+                navigateTo(`/home`);
+                // toast.success('Fetched');
+            }
+            else{
+                toast.warn("Invalid Credentials!");
+                const error = await resp.json();
+                console.log("Invalid Credentials!", error);
+            }
+        }
+        catch (error){
+            console.log("Failed to Login", error);
+            toast.error("Failed to Login");
+        }
+    };
 
     useEffect(() => {
-        console.log("Login");
+        // console.log("Login");
         if(location){
             props.setLocation(location.pathname.split("/")[1].toUpperCase());
         }
+        //check for cookies, if found, forward to home for verification
+        if(cookies.email === "undefined" || cookies.token === "undefined"){
+            //do nothing
+            //necessary to halt the back and forth b/w login and home
+        }
+        else if(cookies.email && cookies.token){
+            navigateTo(`/home`);
+        }
     }, []);
-
-    // useEffect(() => {
-    //     console.log(lists);
-    // }, [lists]);
 
     return(
         <div className="login-container">

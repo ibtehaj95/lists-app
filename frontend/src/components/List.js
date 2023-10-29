@@ -14,11 +14,11 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 const List = (props) => {
 
     const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
-    const [token, setToken] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NTI0MWIwNWJkYzg1Yzg2ZmMxZTNhNjgiLCJuYW1lIjoiQWxleCIsImlhdCI6MTY5NzIwODQ1NywiZXhwIjoxNjk5ODAwNDU3fQ.UNRrwtmrwPYna77Wqv2p4JJzStoRW90E5a0pj3ZA8Zo");
     const [listTitle, setListTitle] = useState(null);
     const [listItems, setListItems] = useState([]);
     const [listCompleted, setListCompleted] = useState(null);
@@ -29,6 +29,7 @@ const List = (props) => {
     const [editable, setEditable] = useState(false);
     const navigateTo = useNavigate();
     const [location] = useState(useLocation());
+    const [cookies] = useCookies(['token', "email"]);
 
     const theme = useTheme();
 
@@ -42,7 +43,7 @@ const List = (props) => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    "Authorization": `Bearer ${cookies.token}`,
                     },
             });
             if(resp.ok === true){
@@ -89,7 +90,7 @@ const List = (props) => {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    "Authorization": `Bearer ${cookies.token}`,
                     },
                 body: JSON.stringify(data),
             });
@@ -116,7 +117,7 @@ const List = (props) => {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    "Authorization": `Bearer ${cookies.token}`,
                     },
             });
             if(resp.ok === true){

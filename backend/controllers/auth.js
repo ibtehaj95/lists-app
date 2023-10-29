@@ -22,7 +22,7 @@ const register = async (req, res) => {
 
     const token = jwt.sign({
             userID: user._id,
-            name: user.name,
+            email: user.email,
         },
         process.env.JWT_SECRET,
         {
@@ -32,7 +32,7 @@ const register = async (req, res) => {
     
     res.status(StatusCodes.CREATED).json({
         user: {
-            name: user.name,
+            email: user.email,
         },
         token,
     });
@@ -55,7 +55,7 @@ const login = async (req, res) => {
 
     const token = jwt.sign({
             userID: user._id,
-            name: user.name,
+            email: user.email,
         },
         process.env.JWT_SECRET,
         {
@@ -73,13 +73,36 @@ const login = async (req, res) => {
     
     res.status(StatusCodes.OK).json({
         user: {
-            name: user.name,
+            email: user.email,
         },
         token,
     });
 };
 
+const verify = async (req, res) => {
+    const {email, token} = req.body;
+    if(!email || !token){
+        throw new BadRequestError("Please provide UID and Token");
+    }
+
+    //check token
+    try{
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        if(payload.email === email){
+            res.status(StatusCodes.OK).end();
+        }
+        else{
+            throw new UnauthenticatedError("Invalid Token");
+        }
+    }
+    catch (err){
+        // console.log(err);
+        throw new UnauthenticatedError("Invalid Token");
+    }
+};
+
 module.exports = {
     register,
     login,
+    verify,
 }
