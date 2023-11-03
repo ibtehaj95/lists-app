@@ -1,2 +1,2 @@
-gnome-terminal -- npm start --prefix ./backend
-gnome-terminal -- npm run serve --prefix ./frontend
+gnome-terminal --title 'backend' -- npm start --prefix ./backend
+gnome-terminal --title 'webpack' -- npm run serve --prefix ./frontend
