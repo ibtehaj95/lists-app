@@ -7,12 +7,12 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import AddIcon from '@mui/icons-material/Add';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 
 const Home = (props) => {
 
     const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
-    const [cookies] = useCookies(['token', "email"]);
+    // const [cookies] = useCookies(['token', "email"]);
     const [lists, setLists] = useState([]);
     const [showNewList, setShowNewList] = useState(false);
     const [location] = useState(useLocation());
@@ -54,11 +54,11 @@ const Home = (props) => {
         getAllLists();
     }, []);
 
-    useEffect(() => {
-        if(cookies.email === undefined && cookies.token === undefined){
-            navigateTo(0); //reload homepage
-        }
-    }, [cookies]);
+    // useEffect(() => {
+    //     if(cookies.email === undefined && cookies.token === undefined){
+    //         navigateTo(0); //reload homepage
+    //     }
+    // }, [cookies]);
 
     return(
         <div>

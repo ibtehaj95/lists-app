@@ -71,16 +71,20 @@ const login = async (req, res) => {
         throw new UnauthenticatedError("Invalid Credentials");
     }
     
-    res.status(StatusCodes.OK).json({
-        user: {
-            email: user.email,
-        },
-        token,
-    });
+    res.status(StatusCodes.OK)
+    .cookie(user.email, token, {
+        maxAge: 2592000, //30 days
+        sameSite: "strict",
+        httpOnly: true,
+        secure: true,
+    })
+    .json();
 };
 
 const verify = async (req, res) => {
-    const {email, token} = req.body;
+    const cookie = req.cookies;
+    const email = Object.keys(cookie)[0];
+    const token = cookie[email];
     if(!email || !token){
         throw new BadRequestError("Please provide UID and Token");
     }

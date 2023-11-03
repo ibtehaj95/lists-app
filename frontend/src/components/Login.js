@@ -28,7 +28,7 @@ const Login = (props) => {
         email: "username@domain.com",
         password: "",
     });
-    const [cookies, setCookie] = useCookies(['token', "email"]);
+    // const [cookies, setCookie] = useCookies(['token', "email"]);
 
     const updateForm = (value, key) => {
         if(key === "email"){
@@ -65,16 +65,18 @@ const Login = (props) => {
         try{
             const resp = await fetch(`${apiURL}/auth/login`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                     },
                 body: JSON.stringify(formVals),
             });
             if(resp.ok === true){
-                const {token, user: {email}} = await resp.json();
+                // no longer receiving data. Cookie being set by server
+                // const {token, user: {email}} = await resp.json();
                 // console.log(email, token);
-                setCookie("token", token);
-                setCookie("email", email);
+                // setCookie("token", token);
+                // setCookie("email", email);
                 navigateTo(`/home`);
                 // toast.success('Fetched');
             }
@@ -96,13 +98,15 @@ const Login = (props) => {
             props.setLocation(location.pathname.split("/")[1].toUpperCase());
         }
         //check for cookies, if found, forward to home for verification
-        if(cookies.email === "undefined" || cookies.token === "undefined"){
-            //do nothing
-            //necessary to halt the back and forth b/w login and home
-        }
-        else if(cookies.email && cookies.token){
-            navigateTo(`/home`);
-        }
+        //html-only cookie can't be checked for existence
+        // if(cookies.email === "undefined" || cookies.token === "undefined"){
+        //     //do nothing
+        //     //necessary to halt the back and forth b/w login and home
+        // }
+        // else if(cookies.email && cookies.token){
+        //     navigateTo(`/home`);
+        // }
+        login();
     }, []);
 
     return(

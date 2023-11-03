@@ -14,6 +14,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const xss = require("xss-clean");
 const rateLimiter = require("express-rate-limit");
+const cookieParser = require('cookie-parser');
 
 // routes
 const authRouter = require("./routes/auth");
@@ -24,7 +25,10 @@ const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
 // middleware-use
-app.use(cors()); //has to be at the top, of all these, doesn't work otherwise
+app.use(cors({
+  origin: 'http://127.0.0.1:5000', //this is the url of the frontend, this and only this can send requests
+  credentials: true
+  })); //has to be at the top, of all these, doesn't work otherwise
 app.set("trust proxy", 1);  //for reverse proxy servers like Nginx
 app.use(rateLimiter({
   windowMs: 15 * 60 * 1000, //15 mins
@@ -34,6 +38,7 @@ app.use(express.json());  //to be able to read JSON in req.body
 app.use(helmet());
 app.use(xss());
 app.use(express.static('public'));
+app.use(cookieParser());
 
 // routes
 app.use("/api/v1/auth", authRouter);
