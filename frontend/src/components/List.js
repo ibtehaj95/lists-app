@@ -53,6 +53,10 @@ const List = (props) => {
                 setListCompletedOld(respBody.list.completed);
                 // toast.success('Fetched');
             }
+            else if(resp.status === 401){
+                navigateTo(`/login`);
+                toast.warn("Session Expired. Please Login");
+            }
             else{
                 toast.warn("Response Not Okay!");
                 const error = await resp.json();
@@ -95,6 +99,10 @@ const List = (props) => {
                 setEditable((prev) => !prev);
                 toast.success('Updated!');
             }
+            else if(resp.status === 401){
+                navigateTo(`/login`);
+                toast.warn("Session Expired. Please Login");
+            }
             else{
                 toast.warn("Response Not Okay!");
                 const error = await resp.json();
@@ -120,6 +128,10 @@ const List = (props) => {
             if(resp.ok === true){
                 toast.success('Deleted');
                 goHome();
+            }
+            else if(resp.status === 401){
+                navigateTo(`/login`);
+                toast.warn("Session Expired. Please Login");
             }
             else{
                 toast.warn("Response Not Okay!");

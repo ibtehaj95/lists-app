@@ -60,6 +60,10 @@ const NewList = (props) => {
                 // toast.success('Created'); //toast won't appear, since we reload page
                 navigateTo(0); //reload homepage
             }
+            else if(resp.status === 401){
+                navigateTo(`/login`);
+                toast.warn("Session Expired. Please Login");
+            }
             else{
                 toast.warn("Response Not Okay!");
                 const error = await resp.json();

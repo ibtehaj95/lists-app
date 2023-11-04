@@ -73,7 +73,7 @@ const login = async (req, res) => {
     
     res.status(StatusCodes.OK)
     .cookie(user.email, token, {
-        maxAge: 2592000, //30 days
+        maxAge: 2592000000, //in milliseconds, this value is for 30 days
         sameSite: "strict",
         httpOnly: true,
         secure: true,

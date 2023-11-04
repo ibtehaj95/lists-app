@@ -6,10 +6,11 @@ import NewList from "./NewList";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import AddIcon from '@mui/icons-material/Add';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Home = (props) => {
 
+    const navigateTo = useNavigate();
     const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
     const [lists, setLists] = useState([]);
     const [showNewList, setShowNewList] = useState(false);
@@ -30,6 +31,10 @@ const Home = (props) => {
                 const respBody = await resp.json();
                 setLists(respBody.lists);
                 // toast.success('Fetched');
+            }
+            else if(resp.status === 401){
+                navigateTo(`/login`);
+                toast.warn("Session Expired. Please Login");
             }
             else{
                 toast.warn("Response Not Okay!");
