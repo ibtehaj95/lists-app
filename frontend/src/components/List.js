@@ -13,6 +13,7 @@ import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
+import * as DOMPurify from 'dompurify';
 
 const List = (props) => {
 
@@ -242,7 +243,7 @@ const List = (props) => {
                                     id="outlined-required"
                                     label="List Name"
                                     value={listTitle}
-                                    onChange={(event) => setListTitle(event.target.value)}
+                                    onChange={(event) => setListTitle(DOMPurify.sanitize(event.target.value))}
                                     sx={{ marginTop: 2 }}
                                 />
                                 <Button size="small" variant="contained" color={listCompleted ? "success" : "error"} disableElevation sx={{ marginX: 1, marginTop: 1.5, paddingX: 1, "pointerEvents": "none"}}>{listCompleted ? "Complete" : "Incomplete"}</Button>
@@ -271,7 +272,7 @@ const List = (props) => {
                                         value={item.name}
                                         size="small"
                                         sx={{ marginTop: 2 }}
-                                        onChange={(event) => {editItem(event.target.value, index)}}
+                                        onChange={(event) => {editItem(DOMPurify.sanitize(event.target.value), index)}}
                                     />
                                     <IconButton 
                                         aria-label="delete" 

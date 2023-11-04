@@ -10,6 +10,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import * as DOMPurify from 'dompurify';
 
 const NewList = (props) => {
 
@@ -127,7 +128,7 @@ const NewList = (props) => {
                             id="outlined-required"
                             label="List Name"
                             value={newListTitle}
-                            onChange={(event) => setNewListTitle(event.target.value)}
+                            onChange={(event) => setNewListTitle(DOMPurify.sanitize(event.target.value))}
                             sx={{ marginTop: 2 }}
                         />
                         {
@@ -142,7 +143,7 @@ const NewList = (props) => {
                                             value={item.name}
                                             size="small"
                                             sx={{ marginTop: 2 }}
-                                            onChange={(event) => {editItem(event.target.value, index)}}
+                                            onChange={(event) => {editItem(DOMPurify.sanitize(event.target.value), index)}}
                                         />
                                         <IconButton 
                                             aria-label="delete" 
