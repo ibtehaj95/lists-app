@@ -8,15 +8,12 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { BrowserRouter } from "react-router-dom";
-import { CookiesProvider } from 'react-cookie';
 
 const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <CookiesProvider defaultSetOptions={{ path: '/' }}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </CookiesProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
