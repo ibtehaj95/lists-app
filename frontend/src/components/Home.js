@@ -6,17 +6,14 @@ import NewList from "./NewList";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import AddIcon from '@mui/icons-material/Add';
-import { useLocation, useNavigate } from 'react-router-dom';
-// import { useCookies } from 'react-cookie';
+import { useLocation } from 'react-router-dom';
 
 const Home = (props) => {
 
     const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
-    // const [cookies] = useCookies(['token', "email"]);
     const [lists, setLists] = useState([]);
     const [showNewList, setShowNewList] = useState(false);
     const [location] = useState(useLocation());
-    const navigateTo = useNavigate();
     
     const openNewListCreate = () => setShowNewList(true);
 
@@ -24,9 +21,9 @@ const Home = (props) => {
         try{
             const resp = await fetch(`${apiURL}/lists`, {
                 method: "GET",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${cookies.token}`,
                     },
             });
             if(resp.ok === true){
@@ -53,12 +50,6 @@ const Home = (props) => {
         }
         getAllLists();
     }, []);
-
-    // useEffect(() => {
-    //     if(cookies.email === undefined && cookies.token === undefined){
-    //         navigateTo(0); //reload homepage
-    //     }
-    // }, [cookies]);
 
     return(
         <div>

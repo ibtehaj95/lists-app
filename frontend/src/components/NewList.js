@@ -10,12 +10,10 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { useCookies } from 'react-cookie';
 
 const NewList = (props) => {
 
     const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
-    const [cookies] = useCookies(['token', "email"]);
     const [newListTitle, setNewListTitle] = useState("Untitled");
     const [newListItems, setNewListItems] = useState([]);
     const navigateTo = useNavigate();
@@ -51,9 +49,9 @@ const NewList = (props) => {
         try{
             const resp = await fetch(`${apiURL}/lists`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${cookies.token}`,
                     },
                 body: JSON.stringify(data),
             });

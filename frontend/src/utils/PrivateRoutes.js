@@ -22,7 +22,6 @@ import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
-import { useCookies } from 'react-cookie';
 import { toast } from 'react-toastify';
 
 const drawerWidth = 240;
@@ -31,7 +30,6 @@ const settings = ['Profile Settings', 'Logout'];
 function PrivateRoutes(props){
 
     const navigateTo = useNavigate();
-    const [cookies, removeCookie] = useCookies(['token', "email"]);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [userVerified, setUserVerified] = useState(false);
     const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
@@ -58,10 +56,37 @@ function PrivateRoutes(props){
                 // toast.success('Verified');
             }
             else{
+                // toast.warn("Invalid Credentials!");
+                const error = await resp.json();
+                console.log("Invalid Credentials!", error);
+                navigateTo(`/login`);
+            }
+        }
+        catch (error){
+            console.log("Failed to Login", error);
+            toast.error("Failed to Login");
+        }
+    };
+
+    const logout = async () => {
+        try{
+            const resp = await fetch(`${apiURL}/auth/logout`, {
+                method: "POST",
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json",
+                    },
+            });
+            if(resp.ok === true){
+                setUserVerified(false);
+                navigateTo("/login");
+                // toast.success('Verified');
+            }
+            else{
                 toast.warn("Invalid Credentials!");
                 const error = await resp.json();
                 console.log("Invalid Credentials!", error);
-                // navigateTo(`/login`);
+                navigateTo(`/login`);
             }
         }
         catch (error){
@@ -71,28 +96,9 @@ function PrivateRoutes(props){
     };
 
     useEffect(() => {
-        // //if tokens exist, verify, otherwise redirect to login
-        // if(cookies.email === "undefined" && cookies.token === "undefined"){
-        //     navigateTo(`/login`);
-        // }
-        // else if(cookies.email && cookies.token){
-        //     verifyCookies(cookies.email, cookies.token);
-        // }
-        // else{
-        //     navigateTo(`/login`);
-        // }
+        //if tokens exist, verify, otherwise redirect to login
         verifyCookies();
     }, []);
-
-    // useEffect(() => {
-
-    //     console.log("Cookie Change", cookies);
-        
-    //     if(cookies.email === undefined && cookies.token === undefined){
-    //         navigateTo(`/login`);
-    //     }
-
-    // }, [cookies]);
 
     return (
         
@@ -136,9 +142,7 @@ function PrivateRoutes(props){
                                             console.log("Show User Profile");
                                         }
                                         else if(index === 1){
-                                            //logout
-                                            removeCookie("token");
-                                            removeCookie("email");
+                                            logout();
                                         }
                                     }}>{setting}</Typography>
                                     </MenuItem>

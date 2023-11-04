@@ -2,15 +2,19 @@ const { CustomAPIError } = require('../errors')
 const { StatusCodes } = require('http-status-codes')
 const errorHandlerMiddleware = (err, req, res, next) => {
   // this (customError object) is designed for thrown errors, but modified in case of Mongoose errors
-  if (err) {
-    console.log(err.name);
-    // console.log(err);
-    // console.error(Object.values(err.errors).map(val => val.message));
-}
+  // if (err) {
+  //   console.log(err.name);
+  //   // console.log(err);
+  //   // console.error(Object.values(err.errors).map(val => val.message));
+  // }
+
   const customError = {
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
     msg: err.message || "Something went wrong. Try again",
   }
+
+  console.log(customError);
+
   // //if you have caught this error and have used throw new ThatSpecificError
   // if (err instanceof CustomAPIError) {
   //   return res.status(err.statusCode).json({ msg: err.message })

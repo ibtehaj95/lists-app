@@ -13,7 +13,6 @@ import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
-import { useCookies } from 'react-cookie';
 
 const List = (props) => {
 
@@ -28,7 +27,6 @@ const List = (props) => {
     const [editable, setEditable] = useState(false);
     const navigateTo = useNavigate();
     const [location] = useState(useLocation());
-    const [cookies] = useCookies(['token', "email"]);
 
     const theme = useTheme();
 
@@ -40,9 +38,9 @@ const List = (props) => {
         try{
             const resp = await fetch(`${apiURL}/lists/${listID}`, {
                 method: "GET",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${cookies.token}`,
                     },
             });
             if(resp.ok === true){
@@ -87,9 +85,9 @@ const List = (props) => {
             // console.log(data);
             const resp = await fetch(`${apiURL}/lists/${listID}`, {
                 method: "PATCH",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${cookies.token}`,
                     },
                 body: JSON.stringify(data),
             });
@@ -114,9 +112,9 @@ const List = (props) => {
         try{
             const resp = await fetch(`${apiURL}/lists/${listID}`, {
                 method: "DELETE",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${cookies.token}`,
                     },
             });
             if(resp.ok === true){
@@ -203,16 +201,10 @@ const List = (props) => {
         console.log({
             listTitle,
             listItems,
-            listCompleted
+            listCompleted,
         });
         checkIfListComplete();
     }, [listItems]);
-
-    useEffect(() => {
-        if(cookies.email === undefined && cookies.token === undefined){
-            navigateTo(0); //reload
-        }
-    }, [cookies]);
 
     return(
         <div className="list-container">

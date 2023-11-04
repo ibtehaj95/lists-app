@@ -12,7 +12,6 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 
 const Login = (props) => {
 
@@ -72,11 +71,6 @@ const Login = (props) => {
                 body: JSON.stringify(formVals),
             });
             if(resp.ok === true){
-                // no longer receiving data. Cookie being set by server
-                // const {token, user: {email}} = await resp.json();
-                // console.log(email, token);
-                // setCookie("token", token);
-                // setCookie("email", email);
                 navigateTo(`/home`);
                 // toast.success('Fetched');
             }
@@ -92,21 +86,40 @@ const Login = (props) => {
         }
     };
 
+    const verifyCookies = async () => {
+        try{
+            const resp = await fetch(`${apiURL}/auth/verify`, {
+                method: "POST",
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json",
+                    },
+            });
+            if(resp.ok === true){
+                // setUserVerified(true);
+                // toast.success('Verified');
+                navigateTo(`/home`);
+            }
+            else{
+                // toast.warn("Invalid Credentials!");
+                const error = await resp.json();
+                console.log("Invalid Credentials!", error);
+                navigateTo(`/login`);
+            }
+        }
+        catch (error){
+            console.log("Failed to Login", error);
+            toast.error("Failed to Login");
+        }
+    };
+
     useEffect(() => {
         // console.log("Login");
         if(location){
             props.setLocation(location.pathname.split("/")[1].toUpperCase());
         }
         //check for cookies, if found, forward to home for verification
-        //html-only cookie can't be checked for existence
-        // if(cookies.email === "undefined" || cookies.token === "undefined"){
-        //     //do nothing
-        //     //necessary to halt the back and forth b/w login and home
-        // }
-        // else if(cookies.email && cookies.token){
-        //     navigateTo(`/home`);
-        // }
-        login();
+        verifyCookies();
     }, []);
 
     return(

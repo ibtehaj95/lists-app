@@ -88,12 +88,38 @@ const verify = async (req, res) => {
     if(!email || !token){
         throw new BadRequestError("Please provide UID and Token");
     }
-
     //check token
     try{
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         if(payload.email === email){
-            res.status(StatusCodes.OK).end();
+            res.status(StatusCodes.OK).json();
+        }
+        else{
+            throw new UnauthenticatedError("Invalid Token");
+        }
+    }
+    catch (err){
+        // console.log(err);
+        throw new UnauthenticatedError("Invalid Token");
+    }
+};
+
+const clearCookie = async (req, res) => {
+    const cookie = req.cookies;
+    const email = Object.keys(cookie)[0];
+    const token = cookie[email];
+    if(!email || !token){
+        throw new BadRequestError("Please provide UID and Token");
+    }
+    //check token
+    try{
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        if(payload.email === email){
+            res.status(StatusCodes.OK).clearCookie(`${email}`, {
+                sameSite: "strict",
+                httpOnly: true,
+                secure: true,
+            }).json();
         }
         else{
             throw new UnauthenticatedError("Invalid Token");
@@ -109,4 +135,5 @@ module.exports = {
     register,
     login,
     verify,
+    clearCookie,
 }

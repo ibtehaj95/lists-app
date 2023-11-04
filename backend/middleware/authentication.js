@@ -3,12 +3,13 @@ const jwt = require("jsonwebtoken");
 const {UnauthenticatedError} = require("../errors");
 
 const auth = (req, res, next) => {
-    //check header
-    const authHdr = req.headers.authorization;
-    if(!authHdr || !authHdr.startsWith("Bearer")){
+    const cookie = req.cookies;
+    const email = Object.keys(cookie)[0];
+    const token = cookie[email];
+    // console.log(email, token);
+    if(!email || !token){
         throw new UnauthenticatedError("Token Not Found");
     }
-    const token = authHdr.split(" ")[1];
     try{
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         req.user = {

@@ -11,7 +11,6 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 
 const Register = (props) => {
 
@@ -30,7 +29,6 @@ const Register = (props) => {
         password: "",
         name: "",
     });
-    const [cookies, setCookie] = useCookies(['token', "email"]);
 
     const updateForm = (value, key) => {
         if(key === "email"){
@@ -75,6 +73,7 @@ const Register = (props) => {
         try{
             const resp = await fetch(`${apiURL}/auth/register`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                     },
@@ -83,8 +82,6 @@ const Register = (props) => {
             if(resp.ok === true){
                 const {token, user: {email}} = await resp.json();
                 // console.log(email, token);
-                setCookie("token", token);
-                setCookie("email", email);
                 navigateTo(`/login`);
                 // toast.success('Fetched');
             }
@@ -106,10 +103,6 @@ const Register = (props) => {
             props.setLocation(location.pathname.split("/")[1].toUpperCase());
         }
     }, []);
-
-    // useEffect(() => {
-    //     console.log("Cookies", cookies);
-    // }, [cookies]);
 
     return(
         <div className="login-container">
