@@ -1,10 +1,9 @@
 #### Database Connection and .env Setup
 
-Copy the .env.config file, shorten the extension to just .env, change the values in there, especially the MONGO_URI
+Copy the .env.template file, shorten the extension to just .env, pleased enable hidden files if they're not visible, change the values in there, particularly the MONGO_URI
 
 #### Setup
 
 ```bash
 npm install
-bash scripts/start.sh
 ```

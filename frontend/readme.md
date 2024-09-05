@@ -1,6 +1,6 @@
-The frontend will launch from the start script, exact details in the backend directory.
+The frontend will launch from the start script, exact details in the project directory.
 
-To set up for the first time:
+#### Setup
 
 ```bash
 npm install
