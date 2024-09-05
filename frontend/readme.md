@@ -1,4 +1,4 @@
-The frontend will launch from the start script.
+The frontend will launch from the start script, exact details in the backend directory.
 
 To set up for the first time:
 
