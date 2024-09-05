@@ -1,5 +1,5 @@
 const express = require("express");
-const {getAllLists,getList,createList,deleteList,updateList,} = require("../controllers/jobs");
+const {getAllLists,getList,createList,deleteList,updateList,} = require("../controllers/lists");
 
 const router = express.Router();
 

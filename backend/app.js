@@ -18,7 +18,7 @@ const cookieParser = require('cookie-parser');
 
 // routes
 const authRouter = require("./routes/auth");
-const listsRouter = require("./routes/jobs");
+const listsRouter = require("./routes/lists");
 
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
