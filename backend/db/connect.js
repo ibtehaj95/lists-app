@@ -10,7 +10,7 @@ const connectDB = async (url) => {
       useUnifiedTopology: true,
     });
   } catch (error) {
-    throw new ServiceUnavailableError(`Failed to connect to MongoDB. Check internet connection and ensure MongoDB cluster is running: ${error.message}`);
+    throw new ServiceUnavailableError(`Failed to connect to MongoDB: ${error.message}`);
   }
 }
 
