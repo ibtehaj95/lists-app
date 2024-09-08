@@ -14,7 +14,7 @@ import * as DOMPurify from 'dompurify';
 
 const NewList = (props) => {
 
-    const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
+    const [apiURL] = useState(process.env.REACT_APP_API_URL || "http://127.0.0.1:3000/api/v1");
     const [newListTitle, setNewListTitle] = useState("Untitled");
     const [newListItems, setNewListItems] = useState([]);
     const navigateTo = useNavigate();

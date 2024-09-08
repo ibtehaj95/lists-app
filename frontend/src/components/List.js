@@ -17,7 +17,7 @@ import * as DOMPurify from 'dompurify';
 
 const List = (props) => {
 
-    const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
+    const [apiURL] = useState(process.env.REACT_APP_API_URL || "http://127.0.0.1:3000/api/v1");
     const [listTitle, setListTitle] = useState(null);
     const [listItems, setListItems] = useState([]);
     const [listCompleted, setListCompleted] = useState(null);

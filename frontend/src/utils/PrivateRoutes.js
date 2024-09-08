@@ -32,7 +32,7 @@ function PrivateRoutes(props){
     const navigateTo = useNavigate();
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [userVerified, setUserVerified] = useState(false);
-    const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
+    const [apiURL] = useState(process.env.REACT_APP_API_URL || "http://127.0.0.1:3000/api/v1");
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);

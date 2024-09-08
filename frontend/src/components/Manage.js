@@ -10,7 +10,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const Manage = (props) => {
 
-    // const [apiURL] = useState("http://127.0.0.1:3000/api/v1");
+    // const [apiURL] = useState(process.env.REACT_APP_API_URL || "http://127.0.0.1:3000/api/v1");
     // const [lists, setLists] = useState([]);
     const [location] = useState(useLocation());
     const navigateTo = useNavigate();
