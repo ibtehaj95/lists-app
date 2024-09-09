@@ -10,6 +10,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    networks:
+      - db
 
   mongo-express:
     image: mongo-express:1.0.2
@@ -22,6 +24,8 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongo-db
     depends_on:
       - mongo-db
+    networks:
+      - db
 
   backend:
     build:
@@ -40,6 +44,9 @@ services:
       JWT_LIFETIME: ${JWT_LIFETIME}
     depends_on:
       - mongo-db
+    networks:
+      - db
+      - client
 
   frontend:
     build:
@@ -55,3 +62,11 @@ services:
       REACT_APP_API_URL: http://backend:3000/api/v1
     depends_on:
       - backend
+    networks:
+      - client
+
+networks:
+  db:
+    driver: bridge
+  client:
+    driver: bridge
